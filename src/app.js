@@ -14,6 +14,7 @@
 
 const express = require("express"); 
 const routes = require('./routes') // importando rota 
+//const requestLog = require("./middlewares/requestLog");
 const db = require("./database");
 
 const app = express();
@@ -23,6 +24,8 @@ db.hasConection();
 // é importante que esteja antes das rotas, para o servidor identificar que estamos trabalhando com json! 
 app.use(express.json());
 
+//app.use(requestLog); // colocar globalmente antes das roatas!
+// foi importado nas rotas 
 app.use(routes);
 // retorna uma resposta no formato de texto!
 // app.get("/", (req, res) => {

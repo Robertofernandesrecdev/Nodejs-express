@@ -2,16 +2,20 @@
 
 const express = require('express');
 const produtoController = require('../controller/produtoController');
+const requestLog = require("../middlewares/requestLog");
+const bloqueio = require("../middlewares/bloqueio");
+
 
 // todos os métodos ficaram disponíveis dentro de routes!
 const routes = express.Router();
 
-//Chamando o metodo de controller onde vão ficar responsavel pelas rotas 
+//Chamando o metodo de controller onde vão ficar responsavel pelas rotas
 // A rota fica com a responsabilidade de direcionar para qual controller ela vai usar!
-routes.get("/produto/lista", produtoController.listarProduto);
-routes.post("/produto/criar", produtoController.cadastrarProduto);
-routes.delete("/deletar", produtoController.deletarProduto);
-routes.put("/atualizar", produtoController.atualizarProduto);
+//importa o requestLog e chama antes do produtoController. 
+routes.get("/produtos", requestLog, bloqueio, produtoController.listarProduto);
+routes.post("/produtos", produtoController.cadastrarProduto);
+routes.delete("/produtos/:id", produtoController.deletarProduto);
+routes.put("/produtos/:id", produtoController.atualizarProduto);
 
 // routes.get("/", (req, res) => {
 //     console.log(req.query); //informações passada via url por query string evitar usar com informações sigilosas. 

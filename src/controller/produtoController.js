@@ -18,23 +18,31 @@ const produtoController = {
             quantidade,
             fabricantes_id,
         });
-        res.json(novoProduto);
+        res.status(201).json(novoProduto);
         //res.json("Produto Cadastrado");
     },
 
     async deletarProduto(req, res) {
-        const { id } = req.params;
-        await Produtos.destroy({
-            where: {
-                id,
-            },
-        });
-        res.json("Produto Deletado");
+        try {
+            const { id } = req.params;
+            await Produtos.destroy({
+                where: {
+                    id,
+                },
+            });
+            res.status(204);
+            // res.json("Produto Deletado");
+        } catch (error) {
+            return res.status(500).json("Ocorreu algum problema!")
+        }     
     },
 
     async atualizarProduto(req, res) {
         const { id } = req.params;
         const { nome, preco, quantidade } = req.body;
+
+        if (!id) return res.status(400).json("id não enviado");
+
         const produtoAtualizado = await Produtos.update({
             nome,
             preco,
