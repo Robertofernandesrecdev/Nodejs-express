@@ -4,6 +4,11 @@ const express = require('express');
 const produtoController = require('../controller/produtoController');
 const requestLog = require("../middlewares/requestLog");
 const bloqueio = require("../middlewares/bloqueio");
+const authLoginValidation = require("../validations/auth/login");
+const usuarioCreateValidation = require("../validations/usuarios/create");
+const authController = require("../controller/authController");
+const usuariosController = require("../controller/usuariosController"); 
+const auth = require("../middlewares/auth");
 
 
 // todos os métodos ficaram disponíveis dentro de routes!
@@ -13,10 +18,12 @@ const routes = express.Router();
 // A rota fica com a responsabilidade de direcionar para qual controller ela vai usar!
 //importa o requestLog e chama antes do produtoController. 
 routes.get("/produtos", requestLog, bloqueio, produtoController.listarProduto);
-routes.post("/produtos", produtoController.cadastrarProduto);
+routes.post("/produtos", auth, produtoController.cadastrarProduto);
 routes.delete("/produtos/:id", produtoController.deletarProduto);
 routes.put("/produtos/:id", produtoController.atualizarProduto);
 
+routes.post("/usuarios", usuarioCreateValidation, usuariosController.registro);
+routes.post("/login", authLoginValidation, authController.login);
 // routes.get("/", (req, res) => {
 //     console.log(req.query); //informações passada via url por query string evitar usar com informações sigilosas. 
 //     // exemplo de como passar http://localhost:3000/?nome=Roberto&email=email@email.com o & divide o que vc quer passar.
